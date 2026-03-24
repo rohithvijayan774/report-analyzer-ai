@@ -22,6 +22,7 @@ def analyze_parameter(name, value, gender):
       "name": name,
       "value": value,
       "status": status,
+      "unit": param["unit"],
       "normal_range": f"{min_val} - {max_val} {param['unit']}",
       "risk_weight": param["risk_weight"]
   }
