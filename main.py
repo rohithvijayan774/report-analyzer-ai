@@ -50,7 +50,7 @@ async def analyze_pdf(file: UploadFile = File(...)):
   #Read PDF
   with pdfplumber.open(file.file) as pdf:
     for page in pdf.pages:
-      text += page.extract_text() + "\n"
+      text += (page.extract_text() or "") + "\n"
 
   #Extract values using regex
   lab_values = {}
