@@ -52,18 +52,20 @@ async def analyze_pdf(file: UploadFile = File(...)):
     for page in pdf.pages:
       text += (page.extract_text() or "") + "\n"
 
+  print(text[:500])
+
   #Extract values using regex
   lab_values = {}
 
   def extract_value(pattern):
     match = re.search(pattern, text, re.IGNORECASE)
-    return float(match.group(1)) if match else None
+    return float(match.group(len(match.groups()))) if match else None
 
   #Simple extraction rules (can improve later)
-  lab_values["hemoglobin"] = extract_value(r"hemoglobin\s*[:\-]?\s*(\d+\.?\d*)")
-  lab_values["fasting_glucose"] = extract_value(r"glucose\s*[:\-]?\s*(\d+\.?\d*)")
-  lab_values["cholesterol_total"] = extract_value(r"cholesterol\s*[:\-]?\s*(\d+\.?\d*)")
-  lab_values["vitamin_d"] = extract_value(r"vitamin\s*d\s*[:\-]?\s*(\d+\.?\d*)")
+  lab_values["hemoglobin"] = extract_value(r"(hemoglobin|hb|hgb)\s*[:\-]?\s*(\d+\.?\d*)")
+  lab_values["fasting_glucose"] = extract_value(r"(glucose|fasting glucose)\s*[:\-]?\s*(\d+\.?\d*)")
+  lab_values["cholesterol_total"] = extract_value(r"(cholesterol|total cholesterol)\s*[:\-]?\s*(\d+\.?\d*)")
+  lab_values["vitamin_d"] = extract_value(r"(vitamin\s*d|vit d)\s*[:\-]?\s*(\d+\.?\d*)")
 
   #Remove None values
   lab_values = {k: v for k, v in lab_values.items() if v is not None}
