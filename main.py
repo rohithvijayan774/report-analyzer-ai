@@ -70,6 +70,12 @@ async def analyze_pdf(file: UploadFile = File(...)):
   #Remove None values
   lab_values = {k: v for k, v in lab_values.items() if v is not None}
 
+  if not lab_values:
+      return {
+          "status": "error,
+          "message": "No lab values detected"
+      }
+
   #Dummy profile (later from user input)
   profile = {
       "gender": "male",
@@ -81,6 +87,7 @@ async def analyze_pdf(file: UploadFile = File(...)):
   result = analyze_report(profile, lab_values)
 
   return {
+      "status": "success",
       "extracted_values": lab_values,
-      "analysis": result
+      **result
   }
