@@ -72,7 +72,7 @@ async def analyze_pdf(file: UploadFile = File(...)):
 
   if not lab_values:
       return {
-          "status": "error,
+          "status": "error",
           "message": "No lab values detected"
       }
 
