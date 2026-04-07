@@ -62,7 +62,7 @@ async def analyze_pdf(file: UploadFile = File(...)):
     return float(match.group(len(match.groups()))) if match else None
 
   #Simple extraction rules (can improve later)
-  lab_values["hemoglobin"] = extract_value(r"(hemoglobin|hb|hgb)\s*[:\-]?\s*(\d+\.?\d*)")
+  lab_values["hemoglobin"] = extract_value(r"(hemoglobin|haemoglobin|hb|hgb)\s*[:\-]?\s*(\d+\.?\d*)")
   lab_values["fasting_glucose"] = extract_value(r"(glucose|fasting glucose)\s*[:\-]?\s*(\d+\.?\d*)")
   lab_values["cholesterol_total"] = extract_value(r"(cholesterol|total cholesterol)\s*[:\-]?\s*(\d+\.?\d*)")
   lab_values["vitamin_d"] = extract_value(r"(vitamin\s*d|vit d)\s*[:\-]?\s*(\d+\.?\d*)")
