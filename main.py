@@ -77,7 +77,7 @@ async def analyze_pdf(file: UploadFile = File(...)):
 
   #Simple extraction rules (can improve later)
   lab_values["hemoglobin"] = extract_haemoglobin(text)
-  lab_values["fasting_glucose"] = extract_value(r"(glucose|fasting glucose)\s*[:\-]?\s*(\d+\.?\d*)")
+  lab_values["fasting_glucose"] = extract_value(r"(glucose|fasting glucose|glucose fasting)\s*[:\-]?\s*(\d+\.?\d*)")
   lab_values["cholesterol_total"] = extract_value(r"(cholesterol|total cholesterol)\s*[:\-]?\s*(\d+\.?\d*)")
   lab_values["vitamin_d"] = extract_value(r"(vitamin\s*d|vit d)\s*[:\-]?\s*(\d+\.?\d*)")
 
