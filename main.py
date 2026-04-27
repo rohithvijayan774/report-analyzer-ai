@@ -22,6 +22,19 @@ class AnalyzeRequest(BaseModel):
   profile: Profile
   lab_values: Dict[str, float]
 
+def extract_haemoglobin(text):
+    lines = text.split("\n")
+
+    for line in lines:
+      line_lower = line.lower()
+      if "glycated" in line_lower or "hba1c" in line_lower:
+        continue
+      if re.search(r"\b(hemoglobin|haemoglobin|hb|hgb)\b", line_lower):
+        match = re.search(r"(\d+\.?\d*)", line)
+        if match:
+          return float(match.group(1))
+    return None
+
 #------------------------
 #Home Route
 #------------------------
@@ -57,12 +70,13 @@ async def analyze_pdf(file: UploadFile = File(...)):
   #Extract values using regex
   lab_values = {}
 
+
   def extract_value(pattern):
     match = re.search(pattern, text, re.IGNORECASE)
     return float(match.group(len(match.groups()))) if match else None
 
   #Simple extraction rules (can improve later)
-  lab_values["hemoglobin"] = extract_value(r"\b(hemoglobin|haemoglobin|hb|hgb)\b(?!.*glycated)(?!.*a1c)\s*[:\-]?\s*(\d+\.?\d*)")
+  lab_values["hemoglobin"] = extract_haemoglobin(text)
   lab_values["fasting_glucose"] = extract_value(r"(glucose|fasting glucose)\s*[:\-]?\s*(\d+\.?\d*)")
   lab_values["cholesterol_total"] = extract_value(r"(cholesterol|total cholesterol)\s*[:\-]?\s*(\d+\.?\d*)")
   lab_values["vitamin_d"] = extract_value(r"(vitamin\s*d|vit d)\s*[:\-]?\s*(\d+\.?\d*)")
